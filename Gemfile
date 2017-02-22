@@ -7,6 +7,8 @@ end
 
 gem 'devise'
 gem 'omniauth-facebook'
+gem 'haml'
+gem 'haml-rails'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.1'
@@ -43,6 +45,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.5'
   gem 'capybara'
   gem 'rspec-collection_matchers'
+  gem 'shoulda', '~> 3.5'
 end
 
 group :development do
