@@ -1,6 +1,17 @@
 require 'rails_helper'
 
 feature 'restaurants' do
+
+  before do
+    visit('/')
+    click_link('Sign up')
+    fill_in('Email', with: 'test@example.com')
+    fill_in('Password', with: 'testtest')
+    fill_in('Password confirmation', with: 'testtest')
+    click_button('Sign up')
+    @user = User.create(email: "test@test.com", password: "testtest", password_confirmation: "testtest")
+  end
+
   context 'no restaurants have been added' do
     scenario 'should display a prompt to add a restaurant' do
       visit('/restaurants')
@@ -11,7 +22,7 @@ feature 'restaurants' do
 
   context 'restaurants have been added' do
     before do
-      Restaurant.create(name: 'KFC', description: 'beautiful')
+      @user.restaurants.create(name: 'KFC', description: 'beautiful')
     end
 
     scenario 'display restaurants' do
@@ -46,7 +57,7 @@ feature 'restaurants' do
   end
 
   context 'viewing restaurants' do
-    let!(:kfc) { Restaurant.create(name: 'KFC', description: 'beautiful')}
+    let!(:kfc) { @user.restaurants.create(name: 'KFC', description: 'beautiful')}
 
     scenario 'lets a user view a restaurant' do
       visit '/restaurants'
@@ -58,7 +69,7 @@ feature 'restaurants' do
   end
 
   context 'editing restaurants' do
-    before { Restaurant.create(name: 'KFC', description: 'beautiful', id: 1)}
+    before { @user.restaurants.create(name: 'KFC', description: 'beautiful', id: 1)}
 
     scenario 'let a user edit a restaurant' do
       visit '/restaurants'
@@ -74,7 +85,7 @@ feature 'restaurants' do
   end
 
   context 'deleting restaurants' do
-    before { Restaurant.create(name: 'KFC', description:'beautiful')}
+    before { @user.restaurants.create(name: 'KFC', description: 'beautiful')}
 
     scenario 'removes a restaurant when a user clicks delete' do
       visit('/restaurants')

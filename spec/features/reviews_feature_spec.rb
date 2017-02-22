@@ -1,7 +1,10 @@
 require 'rails_helper'
 
 feature 'Users can review restaurants' do
-  before { Restaurant.create name: 'Los pollos hermanos'}
+  before do
+    @user = User.create(email: "test@test.com", password: "testtest", password_confirmation: "testtest")
+    @user.restaurants.create(name: 'Los pollos hermanos', description: 'beautiful')
+  end
 
   scenario 'by creating a review via a form' do
     visit '/restaurants'
