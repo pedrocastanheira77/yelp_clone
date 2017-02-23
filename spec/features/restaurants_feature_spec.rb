@@ -53,6 +53,15 @@ feature 'restaurants' do
       end
     end
 
+    context 'user not logged in' do
+      scenario 'does not let you create a restaurant' do
+        visit '/restaurants'
+        click_link 'Sign out'
+        click_link 'Add a restaurant'
+        expect(page).to have_content('You need to sign in or sign up before continuing.')
+      end
+    end
+
 
   end
 
