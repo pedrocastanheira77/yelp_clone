@@ -1,8 +1,10 @@
 require 'rails_helper'
+require_relative '../helpers/restaurants_helper_spec'
 
 feature 'Users can review restaurants' do
   before do
-    @user = User.create(email: "test@test.com", password: "testtest", password_confirmation: "testtest")
+    signup_user1
+    @user = User.find_by_email('test@example.com')
     @user.restaurants.create(name: 'Los pollos hermanos', description: 'beautiful')
   end
 
