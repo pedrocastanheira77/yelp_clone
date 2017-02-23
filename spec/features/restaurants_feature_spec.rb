@@ -1,15 +1,11 @@
 require 'rails_helper'
+require_relative '../helpers/restaurants_helper_spec'
 
 feature 'restaurants' do
 
   before do
-    visit('/')
-    click_link('Sign up')
-    fill_in('Email', with: 'test@example.com')
-    fill_in('Password', with: 'testtest')
-    fill_in('Password confirmation', with: 'testtest')
-    click_button('Sign up')
-    @user = User.create(email: "test@test.com", password: "testtest", password_confirmation: "testtest")
+    signup_user1
+    @user = User.find_by_email("test@example.com")
   end
 
   context 'no restaurants have been added' do
@@ -80,7 +76,7 @@ feature 'restaurants' do
   context 'editing restaurants' do
     before { @user.restaurants.create(name: 'KFC', description: 'beautiful', id: 1)}
 
-    scenario 'let a user edit a restaurant' do
+    scenario 'let a user who created the restaurant, edit a restaurant' do
       visit '/restaurants'
       click_link 'Edit KFC'
       fill_in 'Name', with: 'Kentucky Fried Chicken'
@@ -91,16 +87,34 @@ feature 'restaurants' do
       expect(page).to have_content('Deep fried goodness')
       expect(current_path).to eq('/restaurants/1')
     end
+
+    scenario 'let a user who did not create a restaurant, not to edit a restaurant' do
+      visit '/restaurants'
+      click_link 'Sign out'
+      signup_user2
+      click_link 'Edit KFC'
+      expect(page).to have_content('Cannot edit')
+      expect(current_path).to eq('/restaurants')
+    end
   end
 
   context 'deleting restaurants' do
     before { @user.restaurants.create(name: 'KFC', description: 'beautiful')}
 
-    scenario 'removes a restaurant when a user clicks delete' do
+    scenario 'let a user who created the restaurant, remove a restaurant when a user clicks delete' do
       visit('/restaurants')
       click_link 'Delete KFC'
       expect(page).not_to have_content('KFC')
       expect(page).to have_content("Restaurant deleted succesfully")
+    end
+
+    scenario 'let a user who did not create the restaurant, to not remove a restaurant when a user clicks delete' do
+      visit('/restaurants')
+      click_link 'Sign out'
+      signup_user2
+      click_link 'Delete KFC'
+      expect(page).to have_content('Cannot delete')
+      expect(current_path).to eq('/restaurants')
     end
   end
 
