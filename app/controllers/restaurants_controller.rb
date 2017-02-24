@@ -3,6 +3,7 @@ class RestaurantsController < ApplicationController
 
   def index
     @restaurants = Restaurant.all
+    @users = User.all
     @user = current_user
   end
 
@@ -50,7 +51,6 @@ class RestaurantsController < ApplicationController
       redirect_to restaurants_path
     end
   end
-
 
   private
   def restaurant_params

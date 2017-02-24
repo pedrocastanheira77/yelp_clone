@@ -17,4 +17,24 @@ RSpec.describe Restaurant, type: :model do
 
   it {should belong_to(:user)}
 
+  describe '#average_rating' do
+    context 'no reviews' do
+      it 'returns "N/A" when there are no reviews' do
+        restaurant = Restaurant.create(name: 'The Ivy')
+        expect(restaurant.average_rating).to eq 'N/A'
+      end
+    end
+
+    context 'multiple reviews' do
+      it 'returns the average' do
+        @user_one = User.create(email: "user.one@test.com", password: "testtest", password_confirmation: "testtest")
+        @user_two = User.create(email: "user.two@test.com", password: "testtest", password_confirmation: "testtest")
+        restaurant = Restaurant.create(name: 'The Ivy', user_id: @user_one.id)
+        restaurant.reviews.create(rating: 1, user_id: @user_one.id)
+        restaurant.reviews.create(rating: 5, user_id: @user_two.id)
+        expect(restaurant.average_rating).to eq 3
+        end
+      end
+    end
+
 end
